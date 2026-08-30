@@ -1874,14 +1874,17 @@ document.getElementById('name').addEventListener('input', function() {
 });
 
 document.getElementById('birth').addEventListener('input', function() {
-  let v = this.value.replace(/[^0-9]/g, '');
-  if (v.length > 8) v = v.substring(0, 8);
-  if (v.length >= 5) {
-    v = v.substring(0, 4) + '.' + v.substring(4, 6) + '.' + v.substring(6, 8);
-  } else if (v.length >= 3) {
-    v = v.substring(0, 4) + '.' + v.substring(4);
+  // 숫자만 남긴 뒤 그룹 사이에만 점을 넣는다.
+  // 뒤에 숫자가 있을 때만 점을 넣으므로, 백스페이스로 지우면
+  // '.' 도 같이 지워져 끝자리가 막히지 않는다.
+  const v = this.value.replace(/[^0-9]/g, '').substring(0, 8);
+  let out = v;
+  if (v.length > 6) {
+    out = v.substring(0, 4) + '.' + v.substring(4, 6) + '.' + v.substring(6);
+  } else if (v.length > 4) {
+    out = v.substring(0, 4) + '.' + v.substring(4);
   }
-  this.value = v;
+  this.value = out;
 });
 
 function validBirth(value) {
