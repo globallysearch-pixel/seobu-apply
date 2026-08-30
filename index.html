@@ -813,7 +813,9 @@ textarea {
   2지망 : <b id="posSummary2"><span class="empty">아직 안 고름</span></b>
 </div>
 
-<!-- 직접 고르고 싶은 분을 위한 목록 (조직도 없이도 선택 가능) -->
+<!-- 직접 고르고 싶은 분을 위한 목록 (조직도 없이도 선택 가능)
+     ─ 요청에 따라 드롭다운 UI는 숨김. 값은 아래 hidden 입력으로 유지되며
+       '조직도 보고 직책 고르기'로만 선택합니다.
 <label for="position1">
 1지망 <span class="required">＊필수</span>
 <span class="optional">— 위 버튼 대신 여기서 직접 골라도 됩니다</span>
@@ -828,6 +830,9 @@ textarea {
 <select id="position2">
   <option value="">눌러서 선택해 주세요</option>
 </select>
+-->
+<input type="hidden" id="position1">
+<input type="hidden" id="position2">
 
 <!-- 생년월일 -->
 <label for="birth">
@@ -835,7 +840,6 @@ textarea {
 </label>
 <p class="hint">
 숫자 8자리만 누르면 점(.)은 자동으로 들어갑니다.
-<span class="ex">예: 1955.03.08</span> (1955년 3월 8일)
 </p>
 <input
   id="birth"
@@ -883,7 +887,6 @@ textarea {
 </label>
 <p class="hint">
 숫자만 누르면 '-'는 자동으로 들어갑니다.
-<span class="ex">예: 010-1234-5678</span>
 </p>
 <input
   id="phone"
@@ -900,7 +903,6 @@ textarea {
 </label>
 <p class="hint">
 앞 칸에는 아이디만 쓰고, 뒤 칸에서 메일 종류를 골라 주세요.
-<span class="ex">예: hong1234 @ naver.com</span>
 </p>
 <div class="email-row">
   <input
@@ -1153,6 +1155,9 @@ const positionGroups = [
 function loadPositions() {
   const p1 = document.getElementById('position1');
   const p2 = document.getElementById('position2');
+
+  // 드롭다운을 숨긴 경우(hidden input) 옵션 채우기를 건너뛴다.
+  if (p1.tagName !== 'SELECT' || p2.tagName !== 'SELECT') return;
 
   positionGroups.forEach(function(group) {
     const og1 = document.createElement('optgroup');
