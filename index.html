@@ -2300,11 +2300,15 @@ async function submitApplication() {
       body: JSON.stringify(data)
     });
 
+    // 정상 배포된 Apps Script 웹앱은 CORS 헤더와 함께 JSON 본문을 돌려준다.
+    // 본문을 읽어 ok 값을 직접 확인해야만 성공으로 처리한다.
+    // (본문을 못 읽는 경우 = 배포 오류/차단이므로 성공으로 넘기지 않는다.)
     let result = null;
+    let rawText = '';
     try {
-      result = await res.json();
+      rawText = await res.text();
+      result = JSON.parse(rawText);
     } catch (parseErr) {
-      // 응답 본문을 못 읽는 경우(브라우저 CORS 제한 등) — 전송 자체는 도달함
       result = null;
     }
 
@@ -2312,11 +2316,11 @@ async function submitApplication() {
       submitSuccess();
     } else if (result && result.ok === false) {
       submitFail(result.error);
-    } else if (res.ok) {
-      // 200 응답은 왔으나 본문을 못 읽음 → 전송된 것으로 간주
-      submitSuccess();
-    } else {
+    } else if (!res.ok) {
       submitFail('제출 서버 응답에 문제가 있습니다. (' + res.status + ')');
+    } else {
+      // 200 이지만 우리 형식의 JSON 응답이 아님 → 저장 여부를 확신할 수 없음
+      submitFail('제출 결과를 확인하지 못했습니다. 잠시 후 다시 시도하시고, 계속 실패하면 담당자에게 문의해 주세요.');
     }
   } catch (netErr) {
     submitFail('인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
