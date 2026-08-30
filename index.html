@@ -2277,9 +2277,11 @@ async function submitApplication() {
     agree: agree
   };
 
-  function submitSuccess() {
+  function submitSuccess(updated) {
     clearInterval(progressTimer);
-    setSubmitMessage('제출이 완료되었습니다. 감사합니다.');
+    setSubmitMessage(updated
+      ? '이미 접수된 신청이 있어 최신 내용으로 수정되었습니다. 감사합니다.'
+      : '제출이 완료되었습니다. 감사합니다.');
     message.className = 'message success';
     btn.style.display = 'none';
   }
@@ -2313,7 +2315,7 @@ async function submitApplication() {
     }
 
     if (result && result.ok === true) {
-      submitSuccess();
+      submitSuccess(result.updated === true);
     } else if (result && result.ok === false) {
       submitFail(result.error);
     } else if (!res.ok) {

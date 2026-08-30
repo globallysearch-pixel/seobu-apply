@@ -40,7 +40,7 @@ function doPost(e) {
     }
     var data = JSON.parse(e.postData.contents);
     var result = submitForm(data);
-    out = { ok: true, serialNo: result && result.serialNo };
+    out = { ok: true, serialNo: result && result.serialNo, updated: !!(result && result.updated) };
   } catch (err) {
     out = { ok: false, error: (err && err.message) ? err.message : String(err) };
   }
@@ -77,8 +77,20 @@ function submitForm(data) {
   if (!data.agree) throw new Error('개인정보 수집·이용에 동의해 주세요.');
 
   const sheet = prepareMainSheet_();
-  const lastRow = sheet.getLastRow();
-  const serialNo = lastRow < 2 ? 1 : lastRow;
+
+  // 중복 검사: 성명 + 핸드폰 + 생년월일이 모두 같은 기존 신청이 있으면
+  // 새 행을 추가하지 않고 그 행을 최신 내용으로 갱신한다.
+  // (응답 유실로 인한 재제출·정보 수정 재제출을 하나의 신청으로 유지)
+  const existingRow = findMatchingRow_(sheet, data.name, data.phone, data.birth);
+  const isUpdate = existingRow > 0;
+
+  let serialNo;
+  if (isUpdate) {
+    serialNo = sheet.getRange(existingRow, 1).getValue() || (existingRow - 1);
+  } else {
+    const lastRow = sheet.getLastRow();
+    serialNo = lastRow < 2 ? 1 : lastRow;
+  }
 
   // 원본 파일은 구글 드라이브에 그대로 보존
   const photoUrl = savePhoto_(data.photo, data.name);
@@ -88,8 +100,7 @@ function submitForm(data) {
     ? ((data.recommenderAffiliation || '') + (data.recommenderAffiliation && data.recommenderName ? ' / ' : '') + (data.recommenderName || ''))
     : '';
 
-  // 메인 시트에 데이터 기록
-  sheet.appendRow([
+  const rowData = [
     serialNo,
     data.name,
     photoUrl,
@@ -104,13 +115,55 @@ function submitForm(data) {
     recommender,
     '동의',
     data.applicationDate || ''
-  ]);
+  ];
 
-  const targetRow = sheet.getLastRow();
+  let targetRow;
+  if (isUpdate) {
+    targetRow = existingRow;
+    sheet.getRange(targetRow, 1, 1, HEADERS.length).setValues([rowData]);
+  } else {
+    sheet.appendRow(rowData);
+    targetRow = sheet.getLastRow();
+  }
+
   setMediaCell_(sheet, targetRow, 3, photoUrl, '사진 원본');
   setMediaCell_(sheet, targetRow, 11, signatureUrl, '서명 원본');
 
-  return { success: true, serialNo: serialNo };
+  return { success: true, serialNo: serialNo, updated: isUpdate };
+}
+
+/**
+ * 성명 + 핸드폰 + 생년월일이 모두 일치하는 기존 신청 행 번호를 반환한다.
+ * 없으면 0. 비교 시 이름의 공백/대소문자, 번호·생년월일의 구분기호는 무시한다.
+ */
+function findMatchingRow_(sheet, name, phone, birth) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return 0;
+
+  // 2열(성명)~8열(핸드폰) 범위를 한 번에 읽어 비교
+  const values = sheet.getRange(2, 2, lastRow - 1, 7).getValues();
+  const targetName = normName_(name);
+  const targetPhone = normDigits_(phone);
+  const targetBirth = normDigits_(birth);
+  if (!targetName || !targetPhone || !targetBirth) return 0;
+
+  for (let i = 0; i < values.length; i++) {
+    const rowName = normName_(values[i][0]);   // 성명 (2열)
+    const rowBirth = normDigits_(values[i][4]); // 생년월일 (6열)
+    const rowPhone = normDigits_(values[i][6]); // 핸드폰 (8열)
+    if (rowName === targetName && rowPhone === targetPhone && rowBirth === targetBirth) {
+      return i + 2;
+    }
+  }
+  return 0;
+}
+
+function normName_(v) {
+  return String(v == null ? '' : v).replace(/\s+/g, '').toLowerCase();
+}
+
+function normDigits_(v) {
+  return String(v == null ? '' : v).replace(/[^0-9]/g, '');
 }
 
 /**
