@@ -1,0 +1,2309 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+
+<meta charset="UTF-8">
+
+<!-- 확대(핀치 줌) 허용: 눈이 어두운 사용자가 손가락으로 화면을 키울 수 있어야 함 -->
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<script>
+/* ========================================================
+   인앱 브라우저(카카오톡·네이버·인스타 등) 뷰포트 보정
+
+   일부 인앱 브라우저는 <meta viewport>의 device-width 를 무시하고
+   데스크톱 폭(약 980px)으로 페이지를 그린다 → 글자가 아주 작아짐.
+   레이아웃 폭이 실제 기기 화면 폭보다 뚜렷하게 넓으면(=데스크톱 모드),
+   화면 폭을 픽셀값으로 강제 지정해 모바일 레이아웃으로 되돌린다.
+======================================================== */
+(function () {
+  var vp = document.querySelector('meta[name="viewport"]');
+  if (!vp) return;
+
+  function fixViewport() {
+    var deviceW = window.screen && window.screen.width;      // 물리 화면 CSS 폭 (뷰포트 설정과 무관)
+    var layoutW = document.documentElement.clientWidth;      // 현재 레이아웃 폭
+    if (deviceW && layoutW > deviceW + 40) {
+      vp.setAttribute('content', 'width=' + deviceW + ', initial-scale=1.0');
+    }
+  }
+
+  fixViewport();
+  window.addEventListener('load', fixViewport);
+  window.addEventListener('orientationchange', function () {
+    vp.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    setTimeout(fixViewport, 350);
+  });
+})();
+</script>
+
+<title>
+국민의힘 책임당원협의회 서울서부본부 임원신청서
+</title>
+
+<!-- 카카오 주소검색 -->
+<script
+  src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js">
+</script>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-width: 0;
+  background: #f5f5f5;
+  font-family:
+    Arial,
+    "Noto Sans KR",
+    sans-serif;
+  color: #222;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  padding: 20px 12px 40px;
+  overflow-x: hidden;
+}
+
+.container {
+  width: 100%;
+  max-width: 650px;
+  min-width: 0;
+  margin: 0 auto;
+  background: white;
+  border-radius: 14px;
+  padding: 24px 20px 30px;
+  box-shadow:
+    0 2px 12px rgba(0,0,0,.08);
+}
+
+h1 {
+  font-size: 25px;
+  text-align: center;
+  margin: 4px 0 22px;
+  line-height: 1.45;
+}
+
+.notice {
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 15px;
+  font-size: 16px;
+  line-height: 1.75;
+  margin-bottom: 22px;
+}
+
+.notice strong {
+  color: #d00;
+}
+
+label {
+  display: block;
+  font-weight: 700;
+  font-size: 17px;
+  margin: 22px 0 6px;
+}
+
+.required {
+  color: #d00;
+  font-size: 14px;
+}
+
+.optional {
+  color: #555;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+/* 입력칸 아래 안내(예시) 문구 */
+.hint {
+  font-size: 14.5px;
+  color: #555;
+  line-height: 1.55;
+  margin: 0 0 7px;
+}
+
+.hint .ex {
+  color: #d00;
+  font-weight: 700;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1.5px solid #bbb;
+  border-radius: 9px;
+  padding: 14px 12px;
+  font-size: 17px;
+  background: white;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #E61E2B;
+  outline: 3px solid rgba(230, 30, 43, .35);
+  outline-offset: 1px;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+/* 조직도 버튼 */
+.org-btn {
+  width: 100%;
+  border: 0;
+  background: #E61E2B;
+  color: white;
+  border-radius: 8px;
+  padding: 15px;
+  min-height: 52px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-bottom: 10px;
+}
+
+/* 주소 */
+.address-row {
+  display: flex;
+  gap: 8px;
+}
+
+.address-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.address-btn {
+  width: 104px;
+  flex: 0 0 104px;
+  border: 0;
+  background: #E61E2B;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  min-height: 52px;
+  cursor: pointer;
+}
+
+/* 이메일 */
+.email-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.email-row input {
+  min-width: 0;
+  flex: 1;
+}
+
+.email-at {
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.email-row select {
+  width: 155px;
+  flex: 0 0 155px;
+}
+
+.email-direct {
+  display: none;
+  margin-top: 8px;
+}
+
+/* 경력 */
+.experience-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.experience-row select {
+  width: 90px;
+  flex: 0 0 90px;
+}
+
+.experience-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+.add-career {
+  width: 100%;
+  border: 1.5px solid #bbb;
+  background: white;
+  border-radius: 8px;
+  padding: 14px;
+  min-height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 추천인 */
+.recommender-box {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.recommender-row {
+  display: flex;
+  gap: 8px;
+}
+
+.recommender-row input {
+  flex: 1;
+  min-width: 0;
+}
+
+/* 사진 */
+.photo-box {
+  border: 1px dashed #bbb;
+  border-radius: 10px;
+  padding: 15px;
+  text-align: center;
+}
+
+.photo-preview {
+  display: none;
+  max-width: 180px;
+  max-height: 220px;
+  margin: 10px auto;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.photo-input {
+  width: 100%;
+  font-size: 16px;
+}
+
+.photo-input::file-selector-button {
+  font-size: 16px;
+  font-weight: 700;
+  padding: 12px 16px;
+  margin-right: 12px;
+  border: 0;
+  border-radius: 8px;
+  background: #E61E2B;
+  color: #fff;
+}
+
+/* 가입 신청 문구 */
+.application-confirm {
+  margin-top: 25px;
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 16px;
+  font-size: 15px;
+  line-height: 1.85;
+}
+
+.application-confirm-title {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.application-date {
+  margin-top: 14px;
+  text-align: right;
+  font-weight: 600;
+}
+
+/* 서명 */
+.signature-wrap {
+  position: relative;
+  width: 100%;
+}
+
+#signatureCanvas {
+  display: block;
+  width: 100%;
+  height: 240px;
+  border: 1px solid #999;
+  border-radius: 8px;
+  background: white;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.signature-buttons {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.signature-buttons button {
+  flex: 1;
+  border: 0;
+  border-radius: 7px;
+  padding: 14px;
+  min-height: 50px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.reset-btn {
+  background: #eee;
+  border: 1.5px solid #bbb;
+}
+
+.save-btn {
+  background: #E61E2B;
+  color: white;
+}
+
+.signature-status {
+  font-size: 14px;
+  color: #555;
+  margin-top: 8px;
+  line-height: 1.55;
+}
+
+.signature-status.saved {
+  color: #008542;
+  font-weight: 700;
+}
+
+/* 동의 */
+.agree-box {
+  background: #f7f7f7;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 20px;
+}
+
+.agree-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  line-height: 1.65;
+  font-size: 15.5px;
+  cursor: pointer;
+}
+
+.agree-row input {
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  margin-top: 1px;
+  accent-color: #E61E2B;
+  cursor: pointer;
+}
+
+/* 제출 */
+.submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  border: 0;
+  background: #E61E2B;
+  color: white;
+  border-radius: 9px;
+  padding: 18px;
+  min-height: 58px;
+  font-size: 19px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submit-btn:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.message {
+  text-align: center;
+  margin-top: 15px;
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.6;
+  min-height: 26px;
+}
+
+.error {
+  color: #d00;
+}
+
+.success {
+  color: #008542;
+}
+
+/* ========================================================
+   희망직책 선택 (요약 표시)
+======================================================== */
+.position-summary {
+  margin: 4px 0 6px;
+  padding: 12px 14px;
+  border: 1.5px solid #bbb;
+  border-radius: 9px;
+  background: #fafafa;
+  font-size: 16px;
+  line-height: 1.7;
+}
+.position-summary b {
+  color: #E61E2B;
+}
+.position-summary .empty {
+  color: #888;
+  font-weight: 400;
+}
+
+/* ========================================================
+   조직도 + 직책 선택 통합 모달
+======================================================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 999999;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background: #fff;
+  overflow: hidden;
+  flex-direction: column;
+}
+.modal.open { display: flex; }
+
+/* 상단 제목 바 */
+.picker-head {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  padding-top: max(12px, env(safe-area-inset-top));
+  background: #E61E2B;
+  color: #fff;
+}
+.picker-head h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.picker-head .x {
+  border: 0;
+  background: rgba(255,255,255,.2);
+  color: #fff;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+/* 1지망 / 2지망 전환 탭 */
+.picker-targets {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  border-bottom: 1px solid #eee;
+}
+.picker-targets button {
+  flex: 1;
+  min-height: 56px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  background: #fff;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: #555;
+  cursor: pointer;
+  line-height: 1.35;
+  text-align: center;
+}
+.picker-targets button .t-val {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #111;
+  margin-top: 2px;
+}
+.picker-targets button .t-val.none { color: #aaa; font-weight: 400; }
+.picker-targets button[aria-pressed="true"] {
+  border-color: #E61E2B;
+  background: #fff2f2;
+  color: #E61E2B;
+}
+
+/* 조직도 영역 (모달의 주 콘텐츠 — 남는 공간을 모두 차지) */
+.picker-org {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: #fff;
+}
+.picker-org-bar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+}
+.picker-org-label {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #444;
+  line-height: 1.3;
+}
+.org-controls {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 5px;
+}
+.org-controls button {
+  width: 42px;
+  height: 42px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f2f2f2;
+  color: #111;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.org-viewer {
+  position: relative;
+  width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  touch-action: none;
+  cursor: grab;
+  background: #222;
+}
+.org-viewer.dragging { cursor: grabbing; }
+.org-viewer.dragging .org-tap-hint { opacity: 0; }
+
+/* 조직도 SVG를 감싼 요소 (팬/줌 transform 대상) */
+.modal-image {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* '직책을 눌러 선택' 안내 */
+.org-tap-hint {
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, .72);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 999px;
+  pointer-events: none;
+  transition: opacity .2s;
+  white-space: nowrap;
+}
+.org-tap-hint.gone { display: none; }
+
+/* ── 조직도 SVG ── */
+#orgSvg {
+  display: block;
+  background: #fff;
+}
+#orgSvg .org-links line {
+  stroke: #9aa0a6;
+  stroke-width: 1.5;
+}
+#orgSvg .pos-node { cursor: pointer; }
+#orgSvg .pos-node rect {
+  fill: #f4f6f8;
+  stroke: #8a9099;
+  stroke-width: 1.5;
+}
+#orgSvg .pos-node.grp-hq rect     { fill: #fdecec; }
+#orgSvg .pos-node.grp-com rect    { fill: #eaf0fb; }
+#orgSvg .pos-node.grp-branch rect { fill: #e9f5ec; }
+#orgSvg .pos-node text {
+  fill: #1a1a1a;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: Arial, "Noto Sans KR", sans-serif;
+}
+#orgSvg .pos-node.sel-1 rect { fill: #ffd4d4; stroke: #E61E2B; stroke-width: 3.5; }
+#orgSvg .pos-node.sel-2 rect { fill: #d4e2ff; stroke: #1a5fd0; stroke-width: 3.5; }
+#orgSvg .pos-badge-svg { display: none; }
+#orgSvg .pos-node.sel-1 .pos-badge-svg,
+#orgSvg .pos-node.sel-2 .pos-badge-svg { display: block; }
+#orgSvg .pos-node.sel-1 .pos-badge-svg circle { fill: #E61E2B; }
+#orgSvg .pos-node.sel-2 .pos-badge-svg circle { fill: #1a5fd0; }
+#orgSvg .pos-badge-num { fill: #fff; font-size: 12px; font-weight: 700; }
+
+/* 하단 확정 바 */
+.picker-foot {
+  flex: 0 0 auto;
+  padding: 10px 12px;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+  background: #fff;
+  border-top: 1px solid #eee;
+}
+.picker-warn {
+  display: none;
+  color: #d00;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 8px;
+}
+.picker-warn.show { display: block; }
+.picker-done {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: 10px;
+  background: #E61E2B;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.picker-done:disabled { background: #bbb; cursor: not-allowed; }
+
+@media (max-width: 600px) {
+  body {
+    padding: 10px 8px 30px;
+  }
+  .container {
+    padding: 20px 14px 25px;
+    border-radius: 12px;
+  }
+  h1 {
+    font-size: 22px;
+  }
+  /* 이메일: 좁은 화면에서는 아이디 / (@ 도메인)을 2줄로 나눔 */
+  .email-row {
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .email-row input#emailId {
+    flex: 1 1 100%;
+  }
+  .email-row select {
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
+  }
+  #signatureCanvas {
+    height: 260px;
+  }
+  .recommender-row {
+    flex-direction: column;
+  }
+  .address-btn {
+    width: 96px;
+    flex-basis: 96px;
+  }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container" id="mainContainer">
+
+<h1>
+국민의힘 책임당원협의회<br>
+서울서부본부 임원신청서
+</h1>
+
+<div class="notice">
+국민의힘 책임당원협의회 서울서부본부
+임원 신청을 위한 신청서입니다.<br>
+아래 내용을 정확하게 입력해 주세요.<br>
+<strong>＊</strong> 표시가 있는 항목은 <strong>반드시</strong> 입력해야 합니다.
+</div>
+
+<!-- 성명 -->
+<label for="name">
+성명 <span class="required">＊필수</span>
+</label>
+<input
+  id="name"
+  type="text"
+  maxlength="20"
+  placeholder="예: 홍길동"
+  autocomplete="name"
+>
+
+<!-- 사진 -->
+<label for="photo">
+사진 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+본인 얼굴이 정면으로 나온 사진을 올려 주세요.
+휴대폰은 <span class="ex">사진첩</span>에서, 컴퓨터는 저장된 사진 파일에서 고르면 됩니다.
+</p>
+<div class="photo-box">
+  <input
+    id="photo"
+    class="photo-input"
+    type="file"
+    accept="image/*"
+    onchange="previewPhoto(this)"
+  >
+  <img
+    id="photoPreview"
+    class="photo-preview"
+    alt="선택한 사진 미리보기"
+  >
+</div>
+
+<!-- 희망직책 -->
+<label>
+희망직책 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+아래 버튼을 누르면 <span class="ex">조직도를 보면서</span> 1지망·2지망을
+한 화면에서 고를 수 있습니다.
+</p>
+<button
+  type="button"
+  class="org-btn"
+  onclick="openOrganization()"
+>
+조직도 보고 직책 고르기
+</button>
+
+<div class="position-summary" id="positionSummary" aria-live="polite">
+  1지망 : <b id="posSummary1"><span class="empty">아직 안 고름</span></b><br>
+  2지망 : <b id="posSummary2"><span class="empty">아직 안 고름</span></b>
+</div>
+
+<!-- 직접 고르고 싶은 분을 위한 목록 (조직도 없이도 선택 가능) -->
+<label for="position1">
+1지망 <span class="required">＊필수</span>
+<span class="optional">— 위 버튼 대신 여기서 직접 골라도 됩니다</span>
+</label>
+<select id="position1">
+  <option value="">눌러서 선택해 주세요</option>
+</select>
+
+<label for="position2">
+2지망 <span class="required">＊필수</span>
+</label>
+<select id="position2">
+  <option value="">눌러서 선택해 주세요</option>
+</select>
+
+<!-- 생년월일 -->
+<label for="birth">
+생년월일 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+숫자 8자리만 누르면 점(.)은 자동으로 들어갑니다.
+<span class="ex">예: 1955.03.08</span> (1955년 3월 8일)
+</p>
+<input
+  id="birth"
+  type="text"
+  inputmode="numeric"
+  maxlength="10"
+  placeholder="예: 1955.03.08"
+  autocomplete="off"
+>
+
+<!-- 주소 -->
+<label for="address">
+주소 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+빨간색 <span class="ex">주소 검색</span> 버튼을 누르면 검색 창이 열립니다.
+집 주소를 찾은 뒤, 아래 칸에 상세주소(동/호수)를 적어 주세요.
+</p>
+<div class="address-row">
+  <input
+    id="address"
+    type="text"
+    placeholder="주소 검색 버튼을 눌러 주세요"
+    readonly
+  >
+  <button
+    type="button"
+    class="address-btn"
+    onclick="searchAddress()"
+  >
+    주소 검색
+  </button>
+</div>
+<input
+  id="detailAddress"
+  type="text"
+  placeholder="예: 101동 1203호"
+  autocomplete="off"
+  style="margin-top:8px;"
+>
+
+<!-- 핸드폰 -->
+<label for="phone">
+핸드폰 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+숫자만 누르면 '-'는 자동으로 들어갑니다.
+<span class="ex">예: 010-1234-5678</span>
+</p>
+<input
+  id="phone"
+  type="tel"
+  inputmode="numeric"
+  maxlength="13"
+  placeholder="예: 010-1234-5678"
+  autocomplete="tel"
+>
+
+<!-- 이메일 -->
+<label for="emailId">
+이메일 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+앞 칸에는 아이디만 쓰고, 뒤 칸에서 메일 종류를 골라 주세요.
+<span class="ex">예: hong1234 @ naver.com</span>
+</p>
+<div class="email-row">
+  <input
+    id="emailId"
+    type="text"
+    placeholder="아이디 (영문·숫자)"
+    autocomplete="off"
+  >
+  <span class="email-at">@</span>
+  <select id="emailDomain" aria-label="이메일 종류 선택">
+    <option value="naver.com">naver.com</option>
+    <option value="hanmail.net">hanmail.net</option>
+    <option value="gmail.com">gmail.com</option>
+    <option value="direct">직접입력</option>
+  </select>
+</div>
+<input
+  id="emailDirect"
+  class="email-direct"
+  type="text"
+  placeholder="메일 주소 뒷부분 입력 (영문·숫자)"
+  autocomplete="off"
+  aria-label="이메일 도메인 직접입력"
+>
+
+<!-- 경력 -->
+<label for="careerText0">
+경력 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+왼쪽에서 <span class="ex">전</span>(예전) / <span class="ex">현</span>(현재)을 고르고, 내용을 적어 주세요.
+<span class="ex">예: 현 · ○○동 통장</span>
+여러 개면 아래 <span class="ex">+ 경력 추가</span>를 누르세요.
+</p>
+<div id="careerContainer">
+  <div class="experience-row">
+    <select class="career-type" aria-label="경력 시기 선택">
+      <option value="전">전</option>
+      <option value="현">현</option>
+    </select>
+    <input
+      type="text"
+      id="careerText0"
+      class="career-text"
+      placeholder="예: ○○동 통장"
+    >
+  </div>
+</div>
+<button
+  type="button"
+  class="add-career"
+  onclick="addCareer()"
+>
+＋ 경력 추가
+</button>
+
+<!-- 추천인 -->
+<label for="recommenderAffiliation">
+추천인 <span class="optional">(선택 · 안 적어도 됩니다)</span>
+</label>
+<div class="recommender-box">
+  <div class="recommender-row">
+    <input
+      id="recommenderAffiliation"
+      type="text"
+      placeholder="소속"
+    >
+    <input
+      id="recommenderName"
+      type="text"
+      placeholder="추천인 이름"
+    >
+  </div>
+</div>
+
+<!-- 가입 신청 확인 -->
+<div class="application-confirm">
+  <div class="application-confirm-title">
+    가입 신청 확인
+  </div>
+  본인은 국민의힘 책임당원협의회의 근본취지와 목적에 동의하며<br>
+  정관을 준수하고 국가와 국민의힘의 발전을 위하며<br>
+  스스로의 역량을 적극 발휘하여 자유민주주의 구현 및 정권창출의<br>
+  디딤돌이 될 것을 다짐하며 회원 가입을 신청합니다.
+  <div class="application-date">
+    신청일 : <span id="applicationDate"></span>
+  </div>
+</div>
+
+<!-- 서명 -->
+<label>
+서명 <span class="required">＊필수</span>
+</label>
+<p class="hint">
+아래 흰색 칸 안에 본인 이름을 직접 써 주세요.
+휴대폰은 <span class="ex">손가락</span>으로, 컴퓨터는 <span class="ex">마우스</span>로 쓰면 됩니다.
+잘못 썼으면 <span class="ex">다시 쓰기</span>를 누르세요.
+</p>
+<div class="signature-wrap">
+  <canvas id="signatureCanvas" aria-label="서명 입력 칸"></canvas>
+  <div class="signature-buttons">
+    <button
+      type="button"
+      class="reset-btn"
+      onclick="clearSignature()"
+    >
+      다시 쓰기
+    </button>
+    <button
+      type="button"
+      class="save-btn"
+      onclick="saveSignature()"
+    >
+      저장하기
+    </button>
+  </div>
+  <div
+    class="signature-status"
+    id="signatureStatus"
+  >
+    서명을 마친 뒤 <b>저장하기</b>를 눌러 주세요.
+  </div>
+</div>
+
+<!-- 동의 -->
+<div class="agree-box">
+  <label class="agree-row" for="agree">
+    <input
+      id="agree"
+      type="checkbox"
+    >
+    <span>
+      본인은 위 신청서에 입력한 개인정보의 수집·이용에 동의하며,
+      국민의힘 책임당원협의회 서울서부본부 임원 신청을 위한 자료로 사용하는 것에 동의합니다.
+      <span class="required">＊필수</span>
+    </span>
+  </label>
+</div>
+
+<!-- 제출 -->
+<button
+  type="button"
+  id="submitBtn"
+  class="submit-btn"
+  onclick="submitApplication()"
+>
+임원신청서 제출
+</button>
+
+<div
+  id="message"
+  class="message"
+  role="alert"
+  aria-live="assertive"
+></div>
+
+</div>
+
+<!-- 조직도 + 직책 선택 통합 모달 -->
+<div id="organizationModal" class="modal" role="dialog" aria-label="희망 직책 선택">
+
+  <div class="picker-head">
+    <h2>희망 직책 고르기</h2>
+    <button type="button" class="x" onclick="closeOrganization(true)" aria-label="닫기">×</button>
+  </div>
+
+  <!-- 1지망 / 2지망 전환 -->
+  <div class="picker-targets">
+    <button type="button" id="targetBtn1" aria-pressed="true" onclick="setPickerTarget(1)">
+      지금 고르는 것: <span class="t-val none" id="targetVal1">1지망</span>
+    </button>
+    <button type="button" id="targetBtn2" aria-pressed="false" onclick="setPickerTarget(2)">
+      지금 고르는 것: <span class="t-val none" id="targetVal2">2지망</span>
+    </button>
+  </div>
+
+  <!-- 조직도 (여기서 직책을 눌러 선택) -->
+  <div class="picker-org" id="pickerOrg">
+    <div class="picker-org-bar">
+      <span class="picker-org-label">누르면 선택 · 다시 누르면 해제</span>
+      <div class="org-controls">
+        <button type="button" onclick="zoomOrg(1.25)" aria-label="확대">＋</button>
+        <button type="button" onclick="zoomOrg(0.8)" aria-label="축소">－</button>
+        <button type="button" onclick="resetOrgZoom()" aria-label="원래 크기">↺</button>
+      </div>
+    </div>
+    <div id="orgViewer" class="org-viewer">
+      <div id="organizationImage" class="modal-image" role="img"
+           aria-label="조직도 - 직책 상자를 누르면 선택됩니다"></div>
+      <div class="org-tap-hint">직책 상자를 눌러 선택하세요</div>
+    </div>
+  </div>
+
+  <!-- 확정 -->
+  <div class="picker-foot">
+    <div class="picker-warn" id="pickerWarn"></div>
+    <button type="button" class="picker-done" id="pickerDone" onclick="confirmPicker()" disabled>
+      선택 완료
+    </button>
+  </div>
+</div>
+
+<script>
+/* ========================================================
+   제출 대상 (배포된 Apps Script 웹앱 주소)
+
+   ⚠️ 여기에 넣는 주소는 반드시 아래 형태여야 합니다.
+        https://script.google.com/macros/s/<배포ID>/exec
+      - 중간에  /u/0/  /u/2/  같은 "/u/숫자/" 가 들어가면 반드시 지우세요.
+      - 끝은 /dev 가 아니라 /exec 여야 합니다.
+      - 배포 시 "액세스 권한: 모든 사용자", "실행: 나" 로 설정하세요.
+
+   이 폼(HTML)은 깃허브 페이지 등 일반 웹호스팅에 올려서 배포합니다.
+   그러면 방문자는 script.google.com 화면을 전혀 보지 않으므로
+   구글 로그인 / 다중 계정 문제가 발생하지 않습니다.
+======================================================== */
+const SUBMIT_ENDPOINT =
+  'https://script.google.com/macros/s/AKfycbwSMUbtyn-4VJTA9eGHUU3_vFt1FIRZfvBNBCOlU8-ED2NqZt0CEXgYrZXjHIez1JufHw/exec';
+
+/* =========================
+   조직도
+========================= */
+
+/* 직책을 3개 카테고리로 묶는다: 본부 / 위원회 / 지부 */
+const positionGroups = [
+  {
+    label: '본부',
+    items: ['본부장', '고문', '자문위원', '부본부장', '운영위원회', '시·군·구 지부장']
+  },
+  {
+    label: '위원회',
+    items: [
+      '조직위원회', '기획정책위원회', '국방안보위원회', '경제정책위원회', '여성위원회',
+      '청년위원회', '교육위원회', '미래과학위원회', '대외협력위원회', '사회복지위원회',
+      '녹색환경위원회', '건설위원회', '장애인위원회', '노동인권위원회', '국민안전위원회',
+      '신지식융합위원회', '차세대여성위원회', '중소상공인위원회', 'SNS미디어위원회',
+      '문화예술위원회', '체육진흥위원회', '동포교류위원회', '한류문화위원회', '통일협력위원회',
+      '미래세대위원회', '세대화합위원회', '중소기업위원회'
+    ]
+  },
+  {
+    label: '지부',
+    items: [
+      '부지부장', '지부운영위원회', '사무국장', '조직부', '청년부', '여성부',
+      '정책부', '홍보기획부', '봉사부', '대외협력부'
+    ]
+  }
+];
+
+function loadPositions() {
+  const p1 = document.getElementById('position1');
+  const p2 = document.getElementById('position2');
+
+  positionGroups.forEach(function(group) {
+    const og1 = document.createElement('optgroup');
+    og1.label = group.label;
+    const og2 = document.createElement('optgroup');
+    og2.label = group.label;
+
+    group.items.forEach(function(position) {
+      const o1 = document.createElement('option');
+      o1.value = position;
+      o1.textContent = position;
+      og1.appendChild(o1);
+
+      const o2 = document.createElement('option');
+      o2.value = position;
+      o2.textContent = position;
+      og2.appendChild(o2);
+    });
+
+    p1.appendChild(og1);
+    p2.appendChild(og2);
+  });
+}
+loadPositions();
+
+/* 폼의 두 select ↔ 화면 요약(및 모달) 동기화 */
+function updatePositionSummary() {
+  const v1 = document.getElementById('position1').value;
+  const v2 = document.getElementById('position2').value;
+  const empty = '<span class="empty">아직 안 고름</span>';
+  document.getElementById('posSummary1').innerHTML = v1 || empty;
+  document.getElementById('posSummary2').innerHTML = v2 || empty;
+}
+document.getElementById('position1').addEventListener('change', updatePositionSummary);
+document.getElementById('position2').addEventListener('change', updatePositionSummary);
+updatePositionSummary();
+
+/* ========================================================
+   조직도 모달 안의 직책 선택기
+======================================================== */
+let pickerTarget = 1;   // 지금 고르는 대상 (1지망 / 2지망)
+let pickerPos1 = '';
+let pickerPos2 = '';
+
+function showPickerWarn(text) {
+  const w = document.getElementById('pickerWarn');
+  w.textContent = text;
+  w.classList.add('show');
+  clearTimeout(showPickerWarn._t);
+  showPickerWarn._t = setTimeout(function() { w.classList.remove('show'); }, 3000);
+}
+
+function setPickerTarget(n) {
+  pickerTarget = n;
+  renderPicker();
+}
+
+function pickPosition(position) {
+  // 이미 고른 직책을 다시 누르면 선택 해제 → 해제된 지망 선택 모드로 전환(유지)
+  if (position === pickerPos1) {
+    pickerPos1 = '';
+    pickerTarget = 1;
+    renderPicker();
+    return;
+  }
+  if (position === pickerPos2) {
+    pickerPos2 = '';
+    pickerTarget = 2;
+    renderPicker();
+    return;
+  }
+
+  // 새 직책 선택 → 현재 지망에 배정
+  if (pickerTarget === 1) {
+    pickerPos1 = position;
+    if (!pickerPos2) pickerTarget = 2;  // 기본 흐름: 1지망 다음 자동 2지망
+  } else {
+    pickerPos2 = position;
+    if (!pickerPos1) pickerTarget = 1;  // 2지망부터 골랐으면 1지망 모드로
+  }
+  renderPicker();
+}
+
+function renderPicker() {
+  // 대상 전환 버튼
+  const b1 = document.getElementById('targetBtn1');
+  const b2 = document.getElementById('targetBtn2');
+  b1.setAttribute('aria-pressed', pickerTarget === 1 ? 'true' : 'false');
+  b2.setAttribute('aria-pressed', pickerTarget === 2 ? 'true' : 'false');
+
+  const tv1 = document.getElementById('targetVal1');
+  const tv2 = document.getElementById('targetVal2');
+  tv1.textContent = pickerPos1 || '1지망 (안 고름)';
+  tv2.textContent = pickerPos2 || '2지망 (안 고름)';
+  tv1.classList.toggle('none', !pickerPos1);
+  tv2.classList.toggle('none', !pickerPos2);
+
+  // 하나라도 고르면 안내 문구 숨김
+  const hint = document.querySelector('.org-tap-hint');
+  if (hint) hint.classList.toggle('gone', !!(pickerPos1 || pickerPos2));
+
+  // 조직도 SVG 상자 상태
+  const nodes = document.querySelectorAll('#orgSvg .pos-node');
+  nodes.forEach(function(node) {
+    const pos = node.getAttribute('data-pos');
+    const isP1 = pos === pickerPos1;
+    const isP2 = pos === pickerPos2;
+    node.classList.toggle('sel-1', isP1);
+    node.classList.toggle('sel-2', isP2);
+    const num = node.querySelector('.pos-badge-num');
+    if (num) num.textContent = isP1 ? '1' : (isP2 ? '2' : '');
+  });
+
+  document.getElementById('pickerDone').disabled = !(pickerPos1 && pickerPos2);
+}
+
+function confirmPicker() {
+  if (!pickerPos1 || !pickerPos2) {
+    showPickerWarn('1지망과 2지망을 모두 골라 주세요.');
+    return;
+  }
+  const s1 = document.getElementById('position1');
+  const s2 = document.getElementById('position2');
+  s1.value = pickerPos1;
+  s2.value = pickerPos2;
+  updatePositionSummary();
+  closeOrganization(true);
+}
+
+/* ========================================================
+   조직도 SVG — 직책 목록/계층 구조로부터 직접 그린다.
+   각 직책 상자에 data-pos 가 있어 SVG 위에서 바로 탭 선택 가능.
+======================================================== */
+const orgViewer = document.getElementById('orgViewer');
+const organizationImage = document.getElementById('organizationImage');
+
+const ORG_W = 720;
+const ORG_H = 750;
+const BOX_W = 150;
+const BOX_H = 30;
+const SVG_NS = 'http://www.w3.org/2000/svg';
+
+/* 직책별 그룹 키 (CSS 클래스용) */
+const orgGroupKey = { '본부': 'hq', '위원회': 'com', '지부': 'branch' };
+
+/* 고정 직위 좌표 (상자 중심 x, 상자 위쪽 y) */
+const orgFixed = {
+  '본부장':        [380, 14],
+  '고문':          [140, 76],
+  '부본부장':      [380, 76],
+  '자문위원':      [620, 76],
+  '운영위원회':    [210, 142],
+  '시·군·구 지부장': [560, 142]
+};
+
+function orgLayout() {
+  const nodes = [];
+  Object.keys(orgFixed).forEach(function(pos) {
+    nodes.push({ pos: pos, cx: orgFixed[pos][0], y: orgFixed[pos][1] });
+  });
+
+  // 위원회 27개 → 두 열로
+  const com = positionGroups[1].items;
+  const half = Math.ceil(com.length / 2);
+  com.forEach(function(pos, i) {
+    const left = i < half;
+    nodes.push({
+      pos: pos,
+      cx: left ? 125 : 300,
+      y: 208 + (left ? i : i - half) * 38
+    });
+  });
+
+  // 지부 10개 → 한 열로
+  positionGroups[2].items.forEach(function(pos, i) {
+    nodes.push({ pos: pos, cx: 560, y: 208 + i * 38 });
+  });
+
+  return nodes;
+}
+
+function buildOrgSvg() {
+  const layout = orgLayout();
+  const at = {};
+  layout.forEach(function(n) { at[n.pos] = n; });
+
+  const groupOf = {};
+  positionGroups.forEach(function(g) {
+    g.items.forEach(function(p) { groupOf[p] = orgGroupKey[g.label]; });
+  });
+
+  const svg = document.createElementNS(SVG_NS, 'svg');
+  svg.setAttribute('id', 'orgSvg');
+  svg.setAttribute('viewBox', '0 0 ' + ORG_W + ' ' + ORG_H);
+  svg.setAttribute('width', ORG_W);
+  svg.setAttribute('height', ORG_H);
+
+  const links = document.createElementNS(SVG_NS, 'g');
+  links.setAttribute('class', 'org-links');
+  svg.appendChild(links);
+
+  function line(x1, y1, x2, y2) {
+    const el = document.createElementNS(SVG_NS, 'line');
+    el.setAttribute('x1', x1); el.setAttribute('y1', y1);
+    el.setAttribute('x2', x2); el.setAttribute('y2', y2);
+    links.appendChild(el);
+  }
+  const bottom = function(p) { return at[p].y + BOX_H; };
+
+  // 본부장 → 고문 / 자문위원 / 부본부장
+  line(380, bottom('본부장'), 380, 60);
+  line(140, 60, 620, 60);
+  line(140, 60, 140, at['고문'].y);
+  line(620, 60, 620, at['자문위원'].y);
+  line(380, bottom('본부장'), 380, at['부본부장'].y);
+
+  // 부본부장 → 운영위원회 / 시·군·구 지부장
+  line(380, bottom('부본부장'), 380, 124);
+  line(210, 124, 560, 124);
+  line(210, 124, 210, at['운영위원회'].y);
+  line(560, 124, 560, at['시·군·구 지부장'].y);
+
+  // 운영위원회 → 위원회 두 열
+  line(210, bottom('운영위원회'), 210, 190);
+  line(125, 190, 300, 190);
+  line(125, 190, 125, 208);
+  line(300, 190, 300, 208);
+
+  // 시·군·구 지부장 → 지부 열
+  line(560, bottom('시·군·구 지부장'), 560, 208);
+
+  // 각 열의 세로 연결선 (상자 뒤로 지나가 칸 사이에만 보임)
+  function spine(items, cx) {
+    const first = at[items[0]];
+    const last = at[items[items.length - 1]];
+    line(cx, first.y, cx, last.y + BOX_H);
+  }
+  const com = positionGroups[1].items;
+  const half = Math.ceil(com.length / 2);
+  spine(com.slice(0, half), 125);
+  spine(com.slice(half), 300);
+  spine(positionGroups[2].items, 560);
+
+  // 직책 상자
+  layout.forEach(function(n) {
+    const g = document.createElementNS(SVG_NS, 'g');
+    g.setAttribute('class', 'pos-node grp-' + groupOf[n.pos]);
+    g.setAttribute('data-pos', n.pos);
+    g.setAttribute('role', 'button');
+    g.setAttribute('aria-label', n.pos + ' 선택');
+    g.setAttribute('transform', 'translate(' + (n.cx - BOX_W / 2) + ',' + n.y + ')');
+
+    const rect = document.createElementNS(SVG_NS, 'rect');
+    rect.setAttribute('width', BOX_W);
+    rect.setAttribute('height', BOX_H);
+    rect.setAttribute('rx', 5);
+    g.appendChild(rect);
+
+    const text = document.createElementNS(SVG_NS, 'text');
+    text.setAttribute('x', BOX_W / 2);
+    text.setAttribute('y', BOX_H / 2 + 1);
+    text.setAttribute('text-anchor', 'middle');
+    text.setAttribute('dominant-baseline', 'middle');
+    if (n.pos.length >= 8) text.setAttribute('font-size', '10.5');
+    else if (n.pos.length >= 6) text.setAttribute('font-size', '12');
+    text.textContent = n.pos;
+    g.appendChild(text);
+
+    // 선택 뱃지 (원 + 1/2)
+    const badge = document.createElementNS(SVG_NS, 'g');
+    badge.setAttribute('class', 'pos-badge-svg');
+    const circ = document.createElementNS(SVG_NS, 'circle');
+    circ.setAttribute('cx', BOX_W - 4);
+    circ.setAttribute('cy', 4);
+    circ.setAttribute('r', 11);
+    const num = document.createElementNS(SVG_NS, 'text');
+    num.setAttribute('class', 'pos-badge-num');
+    num.setAttribute('x', BOX_W - 4);
+    num.setAttribute('y', 5);
+    num.setAttribute('text-anchor', 'middle');
+    num.setAttribute('dominant-baseline', 'middle');
+    badge.appendChild(circ);
+    badge.appendChild(num);
+    g.appendChild(badge);
+
+    svg.appendChild(g);
+  });
+
+  organizationImage.innerHTML = '';
+  organizationImage.appendChild(svg);
+  organizationImage.style.width = ORG_W + 'px';
+  organizationImage.style.height = ORG_H + 'px';
+}
+buildOrgSvg();
+
+function closestPosNode(el) {
+  while (el && el.nodeType === 1) {
+    if (el.classList && el.classList.contains('pos-node')) return el;
+    el = el.parentNode;
+  }
+  return null;
+}
+
+function handleOrgTap(clientX, clientY) {
+  const target = document.elementFromPoint(clientX, clientY);
+  const node = closestPosNode(target);
+  if (node) {
+    const pos = node.getAttribute('data-pos');
+    if (pos) pickPosition(pos);
+  }
+}
+
+let orgScale = 1;
+let orgX = 0;
+let orgY = 0;
+
+const activePointers = new Map();
+let panStartX = 0;
+let panStartY = 0;
+let panStartOrgX = 0;
+let panStartOrgY = 0;
+
+/* 탭(선택) 판별용 */
+let orgTapX = 0;
+let orgTapY = 0;
+let orgTapMoved = false;
+let orgTapTime = 0;
+let orgPinchedThisGesture = false;
+
+let pinchStartDistance = null;
+let pinchStartScale = 1;
+let pinchStartMidX = 0;
+let pinchStartMidY = 0;
+let pinchStartOrgX = 0;
+let pinchStartOrgY = 0;
+
+/*
+   기존 버그 수정:
+   이미지가 화면 위/아래 어디든 잘리지 않고 자유롭게 올라오고 내려갈 수 있도록 허용 범위 확대
+*/
+// 상단 컨트롤 바 / 하단 닫기 바가 이미지를 가리지 않도록,
+// '화면에 맞추기' 계산 시에는 그 영역만큼 뺀 안전 영역을 기준으로 삼는다.
+// 조직도 뷰어는 이제 독립된 박스 안에 있어 겹치는 고정 바가 없음
+const ORG_TOP_SAFE = 6;
+const ORG_BOTTOM_SAFE = 6;
+// 화면에 꽉 맞아 이동할 필요가 없는 상태에서도 완전히 고정된 느낌이
+// 들지 않도록 최소한의 드래그 여유를 항상 남겨둔다 (화면 밖으로 나가지 않는 선에서).
+const ORG_PAN_SLACK = 32;
+
+function clampOrgPosition() {
+  const vW = orgViewer.clientWidth || window.innerWidth;
+  const vH = orgViewer.clientHeight || window.innerHeight;
+  const curW = ORG_W * orgScale;
+  const curH = ORG_H * orgScale;
+
+  // 이미지가 화면보다 크면 가장자리가 화면 안으로 들어오지 못하는 선까지,
+  // 작으면 최소 여유(ORG_PAN_SLACK)만큼만 이동을 허용해 화면 밖으로 완전히
+  // 빠져나가지는 않으면서도 손가락으로 밀었을 때 반응은 느껴지게 한다.
+  const maxX = (curW > vW ? (curW - vW) / 2 : 0) + ORG_PAN_SLACK;
+  const maxY = (curH > vH ? (curH - vH) / 2 : 0) + ORG_PAN_SLACK;
+
+  orgX = Math.max(-maxX, Math.min(maxX, orgX));
+  orgY = Math.max(-maxY, Math.min(maxY, orgY));
+}
+
+function updateOrgImage() {
+  clampOrgPosition();
+  organizationImage.style.transform =
+    'translate(-50%, -50%) translate(' + orgX + 'px, ' + orgY + 'px) scale(' + orgScale + ')';
+}
+
+function getFitScale() {
+  const vW = orgViewer.clientWidth || window.innerWidth;
+  const vH = orgViewer.clientHeight || window.innerHeight;
+  const safeH = Math.max(100, vH - ORG_TOP_SAFE - ORG_BOTTOM_SAFE);
+  const scaleX = vW / ORG_W;
+  const scaleY = safeH / ORG_H;
+
+  // 조직도는 세로로 긴 형태라, 좁은 화면에서는 '가로 폭'에 맞추고
+  // 세로는 넘치면 위아래로 밀어서 보게 한다(글자가 읽을 만한 크기 유지).
+  // 단, 세로로도 이미 다 들어오면 전체가 보이도록 한다.
+  const fit = (scaleY >= scaleX) ? scaleX : (scaleX * 0.98);
+
+  // SVG는 확대해도 안 깨지므로 상한을 두지 않는다.
+  return Math.max(0.12, fit);
+}
+
+/* ========================================================
+   조직도 열기 (가상키보드 해제 + 화면 왜곡 방지)
+======================================================== */
+let prevScrollY = 0;
+
+/* ========================================================
+   모달 높이를 "실제로 보이는 화면" 기준으로 계속 맞춰주는 함수
+   - 가상 키보드가 열려있는 동안에는 window.innerHeight(레이아웃 뷰포트)와
+     실제 보이는 높이(visualViewport)가 달라서, 100vh로 고정하면
+     하단 닫기 버튼/상단 컨트롤 버튼이 화면 밖으로 밀려날 수 있음
+   - 이 함수가 그 둘의 차이를 실시간으로 보정해줌
+======================================================== */
+function isOrgModalOpen() {
+  const modal = document.getElementById('organizationModal');
+  return !!modal && modal.classList.contains('open');
+}
+
+function syncOrgModalViewport() {
+  const modal = document.getElementById('organizationModal');
+  if (!isOrgModalOpen()) return;
+  const visibleHeight = window.visualViewport
+    ? window.visualViewport.height
+    : window.innerHeight;
+  modal.style.height = visibleHeight + 'px';
+}
+
+/*
+   Apps Script 웹앱은 실제로 script.google.com(바깥 래퍼) 안에
+   googleusercontent.com iframe(우리 HTML)이 중첩된 구조로 열립니다.
+   모바일에서 입력창에 포커스가 가면 키보드가 뜨면서 "바깥쪽" 페이지까지
+   같이 스크롤되는 경우가 있는데, window.scrollTo()는 cross-origin이라
+   바깥 프레임 스크롤은 초기화하지 못합니다.
+   Element.scrollIntoView()는 브라우저가 직접 처리하는 네이티브 동작이라
+   origin 경계를 넘어 바깥 프레임까지 스크롤을 같이 되돌려줍니다.
+*/
+function forceScrollReset() {
+  window.scrollTo(0, 0);
+  try {
+    document.documentElement.scrollIntoView({ block: 'start', inline: 'start' });
+  } catch (err) {}
+}
+
+function isKeyboardOpen() {
+  if (!window.visualViewport) return false;
+  // 레이아웃 뷰포트와 실제 보이는 뷰포트의 차이가 크면 키보드가 떠 있는 것으로 간주
+  return (window.innerHeight - window.visualViewport.height) > 120;
+}
+
+function openOrganization() {
+  const activeEl = document.activeElement;
+  const wasEditing =
+    activeEl &&
+    typeof activeEl.blur === 'function' &&
+    activeEl !== document.body;
+
+  // 실제로 모달을 화면에 띄우는 부분
+  function actuallyOpenModal() {
+    // 현재 스크롤 위치 저장 후 최상단 이동 (안쪽+바깥쪽 프레임 모두)
+    prevScrollY = window.scrollY || window.pageYOffset;
+    forceScrollReset();
+
+    const modal = document.getElementById('organizationModal');
+
+    // 폼에 이미 고른 값이 있으면 그대로 이어서 고르게 한다
+    pickerPos1 = document.getElementById('position1').value || '';
+    pickerPos2 = document.getElementById('position2').value || '';
+    pickerTarget = !pickerPos1 ? 1 : (!pickerPos2 ? 2 : 1);
+    renderPicker();
+
+    syncOrgModalViewport();
+    modal.classList.add('open');
+
+    // 모바일 뒤로가기 연동
+    history.pushState({ modalOpen: true }, '');
+
+    // 모달이 열려있는 동안 화면(키보드/주소창/회전)이 바뀔 때마다 높이 재계산
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncOrgModalViewport);
+    }
+    window.addEventListener('resize', syncOrgModalViewport);
+    window.addEventListener('orientationchange', syncOrgModalViewport);
+
+    // 키보드가 닫히는 애니메이션 도중 바깥 프레임이 뒤늦게 다시 스크롤되는 경우를
+    // 대비해, 모달이 열린 직후 여러 시점에 걸쳐 스크롤을 계속 보정
+    [0, 60, 150, 300, 500, 800].forEach(function(delay) {
+      setTimeout(forceScrollReset, delay);
+    });
+
+    // 화면 크기가 완전히 안정화된 후 조직도 중앙 배치
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        syncOrgModalViewport();
+        resetOrgZoom();
+      });
+    });
+  }
+
+  if (wasEditing) {
+    // 입력 중이던 필드의 포커스를 풀어 가상 키보드를 닫음
+    activeEl.blur();
+    forceScrollReset();
+
+    // 키보드가 완전히 닫혀 화면 높이가 정상으로 돌아올 때까지 대기한 후 모달을 연다.
+    // (키보드가 떠 있는 상태에서 100vh 기준으로 버튼을 배치하면
+    //  키보드가 닫히는 애니메이션 도중 버튼이 화면 밖으로 밀려나 버림)
+    let waited = 0;
+    const waitForKeyboardClose = setInterval(function() {
+      waited += 50;
+      if (!isKeyboardOpen() || waited >= 500) {
+        clearInterval(waitForKeyboardClose);
+        actuallyOpenModal();
+      }
+    }, 50);
+  } else {
+    actuallyOpenModal();
+  }
+}
+
+function closeOrganization(fromButton) {
+  const modal = document.getElementById('organizationModal');
+  if (!isOrgModalOpen()) return;
+
+  modal.classList.remove('open');
+
+  // 화면 크기 감시 리스너 정리
+  if (window.visualViewport) {
+    window.visualViewport.removeEventListener('resize', syncOrgModalViewport);
+  }
+  window.removeEventListener('resize', syncOrgModalViewport);
+  window.removeEventListener('orientationchange', syncOrgModalViewport);
+
+  // 원래 스크롤 위치로 안전 복구
+  window.scrollTo(0, prevScrollY);
+  try {
+    document.getElementById('mainContainer').scrollIntoView({ block: 'start', inline: 'start' });
+    window.scrollTo(0, prevScrollY);
+  } catch (err) {}
+
+  activePointers.clear();
+  pinchStartDistance = null;
+
+  if (fromButton && history.state && history.state.modalOpen) {
+    history.back();
+  }
+}
+
+// 모바일 뒤로가기 터치 시 조직도만 닫기
+window.addEventListener('popstate', function() {
+  if (isOrgModalOpen()) {
+    closeOrganization(false);
+  }
+});
+
+function zoomOrg(amount) {
+  const oldScale = orgScale;
+  orgScale *= amount;
+  orgScale = Math.max(0.15, Math.min(6, orgScale));
+  if (oldScale !== orgScale) clampOrgPosition();
+  updateOrgImage();
+}
+
+function resetOrgZoom() {
+  orgScale = getFitScale();
+  orgX = 0;
+
+  // 세로로 넘치면 맨 위(본부장)부터 보이도록 위쪽 정렬
+  const vH = orgViewer.clientHeight || window.innerHeight;
+  const curH = ORG_H * orgScale;
+  orgY = (curH > vH) ? (curH - vH) / 2 : 0;
+
+  updateOrgImage();
+}
+
+function getPointerDistance() {
+  const values = Array.from(activePointers.values());
+  if (values.length < 2) return 0;
+  const dx = values[0].x - values[1].x;
+  const dy = values[0].y - values[1].y;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+function getPointerMidpoint() {
+  const values = Array.from(activePointers.values());
+  if (values.length < 2) return { x: 0, y: 0 };
+  return {
+    x: (values[0].x + values[1].x) / 2,
+    y: (values[0].y + values[1].y) / 2
+  };
+}
+
+orgViewer.addEventListener('pointerdown', function(e) {
+  if (e.pointerType === 'mouse' && e.button !== 0) return;
+  e.preventDefault();
+
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  try {
+    orgViewer.setPointerCapture(e.pointerId);
+  } catch (err) {}
+
+  if (activePointers.size === 1) {
+    panStartX = e.clientX;
+    panStartY = e.clientY;
+    panStartOrgX = orgX;
+    panStartOrgY = orgY;
+    orgViewer.classList.add('dragging');
+
+    // 탭 판별 시작
+    orgTapX = e.clientX;
+    orgTapY = e.clientY;
+    orgTapMoved = false;
+    orgTapTime = Date.now();
+    orgPinchedThisGesture = false;
+  }
+
+  if (activePointers.size === 2) {
+    orgPinchedThisGesture = true;
+    pinchStartDistance = getPointerDistance();
+    pinchStartScale = orgScale;
+    const midpoint = getPointerMidpoint();
+    pinchStartMidX = midpoint.x;
+    pinchStartMidY = midpoint.y;
+    pinchStartOrgX = orgX;
+    pinchStartOrgY = orgY;
+    orgViewer.classList.remove('dragging');
+  }
+});
+
+orgViewer.addEventListener('pointermove', function(e) {
+  if (!activePointers.has(e.pointerId)) return;
+  e.preventDefault();
+
+  activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+
+  if (activePointers.size >= 2) {
+    const distance = getPointerDistance();
+    const midpoint = getPointerMidpoint();
+
+    if (pinchStartDistance && pinchStartDistance > 0) {
+      orgScale = pinchStartScale * (distance / pinchStartDistance);
+      orgScale = Math.max(0.15, Math.min(6, orgScale));
+      orgX = pinchStartOrgX + (midpoint.x - pinchStartMidX);
+      orgY = pinchStartOrgY + (midpoint.y - pinchStartMidY);
+      updateOrgImage();
+    }
+    return;
+  }
+
+  if (activePointers.size === 1) {
+    if (Math.abs(e.clientX - orgTapX) > 10 || Math.abs(e.clientY - orgTapY) > 10) {
+      orgTapMoved = true;
+    }
+    orgX = panStartOrgX + (e.clientX - panStartX);
+    orgY = panStartOrgY + (e.clientY - panStartY);
+    updateOrgImage();
+  }
+});
+
+function endOrgPointer(e) {
+  activePointers.delete(e.pointerId);
+
+  try {
+    orgViewer.releasePointerCapture(e.pointerId);
+  } catch (err) {}
+
+  if (activePointers.size < 2) {
+    pinchStartDistance = null;
+  }
+
+  if (activePointers.size === 1) {
+    const remaining = Array.from(activePointers.values())[0];
+    panStartX = remaining.x;
+    panStartY = remaining.y;
+    panStartOrgX = orgX;
+    panStartOrgY = orgY;
+  }
+
+  if (activePointers.size === 0) {
+    orgViewer.classList.remove('dragging');
+
+    // 움직임 없이 짧게 누른 것이면 = 직책 상자 탭 선택
+    if (!orgPinchedThisGesture && !orgTapMoved && (Date.now() - orgTapTime) < 700) {
+      handleOrgTap(e.clientX, e.clientY);
+    }
+  }
+}
+
+orgViewer.addEventListener('pointerup', endOrgPointer);
+orgViewer.addEventListener('pointercancel', endOrgPointer);
+
+orgViewer.addEventListener('wheel', function(e) {
+  e.preventDefault();
+  if (e.deltaY < 0) {
+    zoomOrg(1.12);
+  } else {
+    zoomOrg(0.89);
+  }
+}, { passive: false });
+
+/* =========================
+   신청일 / 주소
+========================= */
+function setApplicationDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0');
+  const day = String(today.getDate()).padStart(2, '0');
+  document.getElementById('applicationDate').textContent = year + '.' + month + '.' + day;
+}
+setApplicationDate();
+
+function searchAddress() {
+  new daum.Postcode({
+    oncomplete: function(data) {
+      let address = (data.userSelectedType === 'R') ? data.roadAddress : data.jibunAddress;
+      document.getElementById('address').value = address;
+      document.getElementById('detailAddress').focus();
+    }
+  }).open();
+}
+
+/* =========================
+   입력 서식 제어 (한글 차단)
+========================= */
+document.getElementById('name').addEventListener('input', function() {
+  this.value = this.value.replace(/[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\s]/g, '');
+});
+
+document.getElementById('birth').addEventListener('input', function() {
+  let v = this.value.replace(/[^0-9]/g, '');
+  if (v.length > 8) v = v.substring(0, 8);
+  if (v.length >= 5) {
+    v = v.substring(0, 4) + '.' + v.substring(4, 6) + '.' + v.substring(6, 8);
+  } else if (v.length >= 3) {
+    v = v.substring(0, 4) + '.' + v.substring(4);
+  }
+  this.value = v;
+});
+
+function validBirth(value) {
+  if (!/^\d{4}\.\d{2}\.\d{2}$/.test(value)) return false;
+  const parts = value.split('.');
+  const year = Number(parts[0]);
+  const month = Number(parts[1]);
+  const day = Number(parts[2]);
+  if (month < 1 || month > 12) return false;
+  const date = new Date(year, month - 1, day);
+  return (
+    date.getFullYear() === year &&
+    date.getMonth() === month - 1 &&
+    date.getDate() === day
+  );
+}
+
+document.getElementById('phone').addEventListener('input', function() {
+  let v = this.value.replace(/[^0-9]/g, '');
+  if (v.length > 11) v = v.substring(0, 11);
+  if (v.length <= 3) {
+    this.value = v;
+  } else if (v.length <= 7) {
+    this.value = v.substring(0, 3) + '-' + v.substring(3);
+  } else {
+    this.value = v.substring(0, 3) + '-' + v.substring(3, 7) + '-' + v.substring(7);
+  }
+});
+
+// 이메일 아이디: 한글 차단 (영문, 숫자, 마침표, 하이픈, 언더스코어만 허용)
+document.getElementById('emailId').addEventListener('input', function() {
+  let value = this.value.split('@')[0];
+  value = value.replace(/[^a-zA-Z0-9._-]/g, '');
+  this.value = value;
+});
+
+document.getElementById('emailDomain').addEventListener('change', function() {
+  const direct = document.getElementById('emailDirect');
+  if (this.value === 'direct') {
+    direct.style.display = 'block';
+    direct.focus();
+  } else {
+    direct.style.display = 'none';
+    direct.value = '';
+  }
+});
+
+// 이메일 도메인: 한글 차단
+document.getElementById('emailDirect').addEventListener('input', function() {
+  let value = this.value.trim().replace(/@/g, '');
+  value = value.replace(/[^a-zA-Z0-9.-]/g, '');
+  this.value = value;
+});
+
+function addCareer() {
+  const container = document.getElementById('careerContainer');
+  const row = document.createElement('div');
+  row.className = 'experience-row';
+  row.innerHTML = `
+    <select class="career-type">
+      <option value="전">전</option>
+      <option value="현">현</option>
+    </select>
+    <input type="text" class="career-text" placeholder="경력을 입력해 주세요">
+  `;
+  container.appendChild(row);
+}
+
+function getExperience() {
+  const rows = document.querySelectorAll('.experience-row');
+  const result = [];
+  rows.forEach(function(row) {
+    const type = row.querySelector('.career-type').value;
+    const text = row.querySelector('.career-text').value.trim();
+    if (text) {
+      result.push(type + ' | ' + text);
+    }
+  });
+  return result.join('\n');
+}
+
+/* =========================
+   사진 업로드 & 압축
+========================= */
+function previewPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  if (!file.type.startsWith('image/')) {
+    alert('이미지 파일만 선택해 주세요.');
+    input.value = '';
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const img = document.getElementById('photoPreview');
+    img.src = e.target.result;
+    img.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function compressPhoto(file) {
+  return new Promise(function(resolve, reject) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const img = new Image();
+      img.onload = function() {
+        const maxSize = 800;
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxSize || height > maxSize) {
+          if (width > height) {
+            height = Math.round(height * maxSize / width);
+            width = maxSize;
+          } else {
+            width = Math.round(width * maxSize / height);
+            height = maxSize;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        resolve(canvas.toDataURL('image/jpeg', 0.75));
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* =========================
+   서명 캔버스
+========================= */
+const canvas = document.getElementById('signatureCanvas');
+const ctx = canvas.getContext('2d');
+let drawing = false;
+let hasSignature = false;
+
+function resizeCanvas() {
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  const oldImage = hasSignature ? canvas.toDataURL() : null;
+
+  canvas.width = Math.round(rect.width * ratio);
+  canvas.height = Math.round(rect.height * ratio);
+
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+  ctx.lineWidth = 2.5;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.strokeStyle = '#111';
+
+  if (oldImage) {
+    const img = new Image();
+    img.onload = function() {
+      ctx.drawImage(img, 0, 0, rect.width, rect.height);
+    };
+    img.src = oldImage;
+  }
+}
+resizeCanvas();
+
+window.addEventListener('resize', function() {
+  if (!drawing) resizeCanvas();
+});
+
+function getPoint(e) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: e.clientX - rect.left,
+    y: e.clientY - rect.top
+  };
+}
+
+canvas.addEventListener('pointerdown', function(e) {
+  e.preventDefault();
+  drawing = true;
+  hasSignature = true;
+  canvas.setPointerCapture(e.pointerId);
+  const p = getPoint(e);
+  ctx.beginPath();
+  ctx.moveTo(p.x, p.y);
+});
+
+canvas.addEventListener('pointermove', function(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  const p = getPoint(e);
+  ctx.lineTo(p.x, p.y);
+  ctx.stroke();
+});
+
+function stopDrawing(e) {
+  if (!drawing) return;
+  e.preventDefault();
+  drawing = false;
+  try {
+    canvas.releasePointerCapture(e.pointerId);
+  } catch (err) {}
+}
+
+canvas.addEventListener('pointerup', stopDrawing);
+canvas.addEventListener('pointercancel', stopDrawing);
+canvas.addEventListener('pointerleave', function(e) {
+  if (drawing && e.pointerType === 'mouse') stopDrawing(e);
+});
+
+function clearSignature() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  hasSignature = false;
+  const s = document.getElementById('signatureStatus');
+  s.classList.remove('saved');
+  s.innerHTML = '서명을 마친 뒤 <b>저장하기</b>를 눌러 주세요.';
+}
+
+function saveSignature() {
+  if (!hasSignature) {
+    alert('먼저 흰색 칸 안에 서명을 해 주세요.');
+    return;
+  }
+  const s = document.getElementById('signatureStatus');
+  s.classList.add('saved');
+  s.textContent = '✓ 서명이 저장되었습니다.';
+}
+
+function getSignatureData() {
+  if (!hasSignature) return '';
+  return canvas.toDataURL('image/png');
+}
+
+function setSubmitMessage(text) {
+  const message = document.getElementById('message');
+  message.className = 'message';
+  message.textContent = text;
+}
+
+function showError(text, focusId) {
+  const message = document.getElementById('message');
+  message.className = 'message error';
+  message.textContent = text;
+
+  // 오류가 난 항목으로 화면을 옮기고 커서를 놓아준다.
+  // (기존에는 무조건 맨 아래로 스크롤해서, 위쪽 항목이 틀린 경우
+  //  정작 고쳐야 할 칸이 안 보였음)
+  if (focusId) {
+    const field = document.getElementById(focusId);
+    if (field) {
+      try {
+        field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } catch (err) {
+        field.scrollIntoView();
+      }
+      if (typeof field.focus === 'function' && field.type !== 'file') {
+        setTimeout(function() {
+          try { field.focus({ preventScroll: true }); } catch (err) { field.focus(); }
+        }, 300);
+      }
+      return;
+    }
+  }
+
+  window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+}
+
+/* ========================================================
+   제출 처리 (순차 메시지 + 폼 전송)
+======================================================== */
+async function submitApplication() {
+  const btn = document.getElementById('submitBtn');
+  const message = document.getElementById('message');
+  message.className = 'message';
+  message.textContent = '';
+
+  if (btn.disabled) return;
+
+  const name = document.getElementById('name').value.trim();
+  const position1 = document.getElementById('position1').value;
+  const position2 = document.getElementById('position2').value;
+  const birth = document.getElementById('birth').value;
+  const address = document.getElementById('address').value.trim();
+  const detailAddress = document.getElementById('detailAddress').value.trim();
+  const phone = document.getElementById('phone').value;
+  const emailId = document.getElementById('emailId').value.trim();
+  const emailDomain = document.getElementById('emailDomain').value;
+  const emailDirect = document.getElementById('emailDirect').value.trim();
+  const photoInput = document.getElementById('photo');
+  const recommenderAffiliation = document.getElementById('recommenderAffiliation').value.trim();
+  const recommenderName = document.getElementById('recommenderName').value.trim();
+  const agree = document.getElementById('agree').checked;
+  const applicationDate = document.getElementById('applicationDate').textContent;
+
+  if (!name) { showError('성명을 입력해 주세요.', 'name'); return; }
+  if (!position1) { showError('희망직책 1지망을 선택해 주세요.', 'position1'); return; }
+  if (!position2) { showError('희망직책 2지망을 선택해 주세요.', 'position2'); return; }
+  if (position1 === position2) { showError('1지망과 2지망은 다른 직책을 선택해 주세요.', 'position2'); return; }
+  if (!validBirth(birth)) { showError('생년월일을 8자리 숫자로 정확하게 입력해 주세요. 예: 1955.03.08', 'birth'); return; }
+  if (!address) { showError('‘주소 검색’ 버튼을 눌러 주소를 찾아 주세요.', 'address'); return; }
+  if (!detailAddress) { showError('상세주소(동/호수)를 입력해 주세요. 예: 101동 1203호', 'detailAddress'); return; }
+  if (!/^01[0-9]-\d{3,4}-\d{4}$/.test(phone)) { showError('핸드폰 번호를 정확하게 입력해 주세요. 예: 010-1234-5678', 'phone'); return; }
+  if (!emailId) { showError('이메일 아이디를 입력해 주세요.', 'emailId'); return; }
+  if (emailId.includes('@')) { showError('이메일 아이디에는 @를 입력하지 마세요.', 'emailId'); return; }
+  if (/[^a-zA-Z0-9._-]/.test(emailId)) { showError('이메일 아이디는 영문과 숫자만 사용할 수 있습니다.', 'emailId'); return; }
+
+  let email = '';
+  if (emailDomain === 'direct') {
+    if (!emailDirect) { showError('이메일 주소 뒷부분을 입력해 주세요.', 'emailDirect'); return; }
+    if (emailDirect.includes('@')) { showError('이메일 뒷부분에는 @를 입력하지 마세요.', 'emailDirect'); return; }
+    if (/[^a-zA-Z0-9.-]/.test(emailDirect)) { showError('이메일 뒷부분은 영문과 숫자만 사용할 수 있습니다.', 'emailDirect'); return; }
+    email = emailId + '@' + emailDirect;
+  } else {
+    email = emailId + '@' + emailDomain;
+  }
+
+  const experience = getExperience();
+  if (!experience) { showError('경력을 최소 1개 입력해 주세요.', 'careerText0'); return; }
+  if (!photoInput.files[0]) { showError('사진을 올려 주세요.', 'photo'); return; }
+
+  const signatureData = getSignatureData();
+  if (!signatureData) { showError('흰색 칸 안에 서명을 해 주세요.', 'signatureCanvas'); return; }
+  if (!agree) { showError('개인정보 수집·이용에 동의해 주세요. (맨 아래 네모칸을 눌러 체크)', 'agree'); return; }
+
+  btn.disabled = true;
+  btn.textContent = '제출 중입니다..';
+
+  const progressMsgs = [
+    '제출 중입니다.',
+    '약 5초 정도 소요됩니다.',
+    '데이터를 전송 중입니다.',
+    '입력하신 정보를 안전하게 저장하고 있습니다.',
+    '잠시만 기다려주세요.'
+  ];
+
+  let pIdx = 0;
+  setSubmitMessage(progressMsgs[pIdx]);
+
+  const progressTimer = setInterval(function() {
+    pIdx++;
+    if (pIdx < progressMsgs.length) {
+      setSubmitMessage(progressMsgs[pIdx]);
+    }
+  }, 900);
+
+  let photoData;
+  try {
+    photoData = await compressPhoto(photoInput.files[0]);
+  } catch (error) {
+    clearInterval(progressTimer);
+    btn.disabled = false;
+    btn.textContent = '임원신청서 제출';
+    showError('사진을 처리할 수 없습니다.');
+    return;
+  }
+
+  const fullAddress = address + ' ' + detailAddress;
+  const data = {
+    name: name,
+    position1: position1,
+    position2: position2,
+    birth: birth,
+    address: fullAddress,
+    phone: phone,
+    email: email,
+    experience: experience,
+    recommenderAffiliation: recommenderAffiliation,
+    recommenderName: recommenderName,
+    applicationDate: applicationDate,
+    photo: photoData,
+    signature: signatureData,
+    agree: agree
+  };
+
+  function submitSuccess() {
+    clearInterval(progressTimer);
+    setSubmitMessage('제출이 완료되었습니다. 감사합니다.');
+    message.className = 'message success';
+    btn.style.display = 'none';
+  }
+
+  function submitFail(msg) {
+    clearInterval(progressTimer);
+    btn.disabled = false;
+    btn.textContent = '임원신청서 제출';
+    showError(msg || '제출 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.');
+  }
+
+  try {
+    const res = await fetch(SUBMIT_ENDPOINT, {
+      method: 'POST',
+      // text/plain 으로 보내면 CORS 프리플라이트(OPTIONS)가 생기지 않는다.
+      // (Apps Script 웹앱은 OPTIONS 요청을 처리하지 못함)
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(data)
+    });
+
+    let result = null;
+    try {
+      result = await res.json();
+    } catch (parseErr) {
+      // 응답 본문을 못 읽는 경우(브라우저 CORS 제한 등) — 전송 자체는 도달함
+      result = null;
+    }
+
+    if (result && result.ok === true) {
+      submitSuccess();
+    } else if (result && result.ok === false) {
+      submitFail(result.error);
+    } else if (res.ok) {
+      // 200 응답은 왔으나 본문을 못 읽음 → 전송된 것으로 간주
+      submitSuccess();
+    } else {
+      submitFail('제출 서버 응답에 문제가 있습니다. (' + res.status + ')');
+    }
+  } catch (netErr) {
+    submitFail('인터넷 연결을 확인한 뒤 다시 시도해 주세요.');
+  }
+}
+</script>
+
+</body>
+
+</html>
