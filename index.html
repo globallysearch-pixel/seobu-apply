@@ -1848,11 +1848,23 @@ orgViewer.addEventListener('wheel', function(e) {
    신청일 / 주소
 ========================= */
 function setApplicationDate() {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  document.getElementById('applicationDate').textContent = year + '.' + month + '.' + day;
+  // 기기 시간대와 무관하게 항상 한국 표준시(KST) 기준 오늘 날짜를 쓴다.
+  let text;
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric', month: '2-digit', day: '2-digit'
+    }).formatToParts(new Date());
+    const get = function(t) { return (parts.find(function(p) { return p.type === t; }) || {}).value; };
+    text = get('year') + '.' + get('month') + '.' + get('day');
+  } catch (err) {
+    // Intl/시간대 미지원 환경 대비: UTC+9 로 직접 보정
+    const kst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    text = kst.getUTCFullYear() + '.' +
+      String(kst.getUTCMonth() + 1).padStart(2, '0') + '.' +
+      String(kst.getUTCDate()).padStart(2, '0');
+  }
+  document.getElementById('applicationDate').textContent = text;
 }
 setApplicationDate();
 
